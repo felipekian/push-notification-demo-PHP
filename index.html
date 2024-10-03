@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <title>Notification Demo</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+</head>
+
+<body>
+
+  <h1> Notification Demo </h1>
+
+  <button onclick="enableNotification()">Habilitar Notificação</button>
+
+  <div id="sub"></div>
+
+  <script>
+
+    navigator.serviceWorker.register('sw.js');
+
+    function enableNotification() {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          //get service worker
+          navigator.serviceWorker.ready.then((sw) => {
+            //subscribe
+            sw.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: "BMAueRkvQaqvxNQdjIemRU89xtEAB_GlBj3I3G9SPeH9aXPCPSbpVh1WEsHr_zjfsq3MifYEfmwdi-Uif_698Qs"
+            }).then((subscription) => {
+              // salvar no banco de dados para comunicação CHAVE
+              
+              const sub = JSON.stringify(subscription);
+              console.log(sub);
+              
+              const divSub = document.getElementById('sub');
+              divSub.innerText = sub;
+              divSub.style.border = "1px solid black";
+              divSub.style.marginTop = "20px";
+              divSub.style.padding = "10px";
+              divSub.style.overflow = "scroll";
+            });
+          });
+        }
+      });
+    }
+
+  </script>
+</body>
+
+</html>
